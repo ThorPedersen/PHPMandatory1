@@ -14,7 +14,7 @@ session_start();
 <tr class="tablerow">
 <td>
 <?php
-if($_SESSION["username"]) {
+if(isset($_SESSION["username"])) {
 ?>
 Welcome <?php echo $_SESSION["username"]; ?>. Click here to <a href="logout.php" tite="Logout">Logout.
 <?php
