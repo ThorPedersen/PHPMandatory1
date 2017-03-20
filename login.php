@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "mandatory");
+require_once('db_handler.php');
 
 $message = "";
 /* check connection */
