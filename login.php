@@ -57,27 +57,27 @@ if(isset($_POST['register']))
 	}
 
 		
-	if($firstName == null || removespaces($firstName))
+	if($firstName == null || removespaces($firstName) == null)
 	{
 		$Registermessage .= "Firstname is required <br>";
 	}
-	if ($lastName == null || removespaces($lastName))
+	if ($lastName == null || removespaces($lastName) == null)
 	{
 		$Registermessage .= "Lastname is required <br>";
 	}
-	if ($userName == null || removespaces($userName))
+	if ($userName == null || removespaces($userName) == null)
 	{
 		$Registermessage .= "Username is required <br>";
 	}
-	if ($email == null || removespaces($email))
+	if ($email == null || removespaces($email) == null)
 	{
 		$Registermessage .= "Email is required <br>";
 	}
-	if ($password == null || removespaces($password))
+	if ($password == null || removespaces($password) == null)
 	{
 		$Registermessage .= "Password is required <br>";
 	}
-	if(strlen($Registermessage) > 0)
+	if(strlen($Registermessage) == "")
 	{
 	
 		$stmt = $conn->prepare("INSERT INTO users (first_name, last_name,  user_name, user_email, user_password, user_access) VALUES (?, ?, ?, ?, ?, ?)");
@@ -89,14 +89,11 @@ if(isset($_POST['register']))
 		
 		if($stmt->num_rows == 1) {
 			//don't do in production, people can steal information
-			$_SESSION['signup_message'] = "You are created in the system";
+			$Registermessage = "You are created in the system";
 		} else {
 			//don't do in production, people can steal information
-			$_SESSION['signup_message'] = mysqli_error($conn);
+			//Registermessage = mysqli_error($conn);
 		}
-	} else {
-		
-		$_SESSION['signup_message'] = "<span style='color:red'>All the fields are required</span>";
 	}
 
 	if(strlen($Registermessage) != 0)
@@ -129,7 +126,7 @@ $conn->close();
 </form>
 
 <form action="" method="post" id="frmRegister">
-	<div class="error-message"><?php if(isset($Registermessage)) { echo $Registermessage; } ?></div>	
+	<div class="error-message"><span style='color:red'><?php if(isset($Registermessage)) { echo $Registermessage; } ?></span></div>	
 	<div class="field-group">
 		<div><label for="first_name">First name</label></div>
 		<div><input name="first_name" type="text" class="input-field"></div>
