@@ -2,9 +2,6 @@
 session_start();
 require_once('db_handler.php');
 
-$LoginMessage = "";
-$Registermessage = "";
-
 /* check connection */
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -12,6 +9,7 @@ if ($conn->connect_error) {
 
 if(isset($_POST['login']))
 {
+	$LoginMessage = "";
 	$username = $_POST['userName'];
 	$password = $_POST['password'];
 	
@@ -79,26 +77,12 @@ if(isset($_POST['register']))
 	}
 	if(strlen($Registermessage) == "")
 	{
-	
-		$stmt = $conn->prepare("INSERT INTO users (first_name, last_name,  user_name, user_email, user_password, user_access) VALUES (?, ?, ?, ?, ?, ?)");
-		$stmt->bind_param('sssssi', $firstName, $lastName, $userName, $email, $password, $access);
-		$stmt->execute();
-		
-		//$stmt->bind_result($username, $email, $access);
-		//$stmt->store_result();
-		
-		if($stmt->num_rows == 1) {
-			//don't do in production, people can steal information
+		if($stmt = $conn->prepare("INSERT INTO users (first_name, last_name,  user_name, user_email, user_password, user_access) VALUES (?, ?, ?, ?, ?, ?)")) {
+				
+			$stmt->bind_param('sssssi', $firstName, $lastName, $userName, $email, $password, $access);
+			$stmt->execute();
 			$Registermessage = "You are created in the system";
-		} else {
-			//don't do in production, people can steal information
-			//Registermessage = mysqli_error($conn);
 		}
-	}
-
-	if(strlen($Registermessage) != 0)
-	{
-		$_SESSION['signup_message'] = $Registermessage;
 	}
 }
 $conn->close();
