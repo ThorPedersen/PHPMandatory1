@@ -98,7 +98,7 @@ $conn->close();
 	<div class="error-message"><?php if(isset($LoginMessage)) { echo $LoginMessage; } ?></div>	
 	<div class="field-group">
 		<div><label for="login">Username</label></div>
-		<div><input name="userName" type="text" class="input-field" required></div>
+		<div><input name="userName" type="text" class="input-field" value="<?php if(isset($firstName)) { $firstName}?>" required></div>
 	</div>
 	<div class="field-group">
 		<div><label for="password">Password</label></div>
@@ -125,7 +125,7 @@ $conn->close();
 	</div>
 		<div class="field-group">
 		<div><label for="email">Email</label></div>
-		<div><input name="email" type="text" class="input-field" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" required> </div>
+		<div><input name="email" type="email" class="input-field" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" required> </div>
 	</div>
 		<div class="field-group">
 		<div><label for="password">Password</label></div>
