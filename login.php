@@ -98,11 +98,11 @@ $conn->close();
 	<div class="error-message"><?php if(isset($LoginMessage)) { echo $LoginMessage; } ?></div>	
 	<div class="field-group">
 		<div><label for="login">Username</label></div>
-		<div><input name="userName" type="text" class="input-field"></div>
+		<div><input name="userName" type="text" class="input-field" required></div>
 	</div>
 	<div class="field-group">
 		<div><label for="password">Password</label></div>
-		<div><input name="password" type="password" class="input-field"> </div>
+		<div><input name="password" type="password" class="input-field" required> </div>
 	</div>
 	<div class="field-group">
 		<div><input type="submit" name="login" value="Login" class="form-submit-button"></span></div>
@@ -113,23 +113,23 @@ $conn->close();
 	<div class="error-message"><span style='color:red'><?php if(isset($Registermessage)) { echo $Registermessage; } ?></span></div>	
 	<div class="field-group">
 		<div><label for="first_name">First name</label></div>
-		<div><input name="first_name" type="text" class="input-field"></div>
+		<div><input name="first_name" type="text" class="input-field" required></div>
 	</div>
 	<div class="field-group">
 		<div><label for="last_name">Last name</label></div>
-		<div><input name="last_name" type="text" class="input-field"> </div>
+		<div><input name="last_name" type="text" class="input-field" required> </div>
 	</div>
 		<div class="field-group">
 		<div><label for="user_name">User name</label></div>
-		<div><input name="user_name" type="text" class="input-field"> </div>
+		<div><input name="user_name" type="text" class="input-field" required> </div>
 	</div>
 		<div class="field-group">
 		<div><label for="email">Email</label></div>
-		<div><input name="email" type="text" class="input-field"> </div>
+		<div><input name="email" type="text" class="input-field" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" required> </div>
 	</div>
 		<div class="field-group">
 		<div><label for="password">Password</label></div>
-		<div><input name="password" type="password" class="input-field"> </div>
+		<div><input name="password" type="password" class="input-field" required> </div>
 	</div>
 	<div class="field-group">
 		<div><input type="submit" name="register" value="register" class="form-submit-button"></span></div>
