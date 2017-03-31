@@ -1,46 +1,46 @@
-#frmLogin { 
-	padding: 20px 60px;
-	background: #B6E0FF;
-	color: #555;
-	display: inline-block;
-	border-radius: 4px; 
+/*ul { 
+	padding: 0;
+	margin: 0;
+	background: #fff;
 }
-.field-group { 
-	margin:15px 0px; 
+
+li { 
+	display: inline; 
+	position: relative; 
 }
-.input-field {
-	padding: 8px;width: 200px;
-	border: #A3C3E7 1px solid;
-	border-radius: 4px; 
+
+ul ul { 
+	position: absolute; 
+	left: 0; 
+	top: 100%; 
+	display: none; 
 }
-.form-submit-button {
-	background: #65C370;
-	border: 0;
-	padding: 8px 20px;
-	border-radius: 4px;
-	color: #FFF;
-	text-transform: uppercase; 
+
+li:hover ul {
+	display: block; 
+}*/
+
+nav > ul > li {
+    clear: left;
+    position: relative;
 }
-.member-dashboard {
-	padding: 40px;
-	background: #D2EDD5;
-	color: #555;
-	border-radius: 4px;
-	display: inline-block;
-	text-align:center; 
+
+nav > ul > li ul {
+     display: none;   
 }
-.logout-button {
-	color: #09F;
-	text-decoration: none;
-	background: none;
-	border: none;
-	padding: 0px;
-	cursor: pointer;
+
+nav > ul > li:hover ul {
+    display: block;
 }
-.error-message {
-	text-align:center;
-	color:#FF0000;
+
+nav > ul > li ul {
+    position: absolute;
+    left: 100px;
+    top: 0;
 }
-.demo-content label{
-	width:auto;
-}
+
+
+nav > ul > li ul li {
+    float: left;
+    display: inline-block;
+}?
