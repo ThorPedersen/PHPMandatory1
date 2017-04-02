@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 31, 2017 at 02:12 AM
+-- Generation Time: Apr 02, 2017 at 11:41 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -77,6 +77,13 @@ CREATE TABLE `orders` (
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `user_email`, `product_id`, `amount`, `date`) VALUES
+(1, 'bob@bob.com', 1, 50, '2017-04-02');
+
 -- --------------------------------------------------------
 
 --
@@ -86,6 +93,8 @@ CREATE TABLE `orders` (
 CREATE TABLE `products` (
   `id` int(11) NOT NULL,
   `name` varchar(150) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `price` double NOT NULL,
   `date_added` date NOT NULL,
   `category_id` int(11) NOT NULL,
   `stock` int(11) NOT NULL
@@ -95,8 +104,8 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `name`, `date_added`, `category_id`, `stock`) VALUES
-(1, 'GTX 1070', '2017-03-31', 6, 50);
+INSERT INTO `products` (`id`, `name`, `image`, `price`, `date_added`, `category_id`, `stock`) VALUES
+(1, 'GTX 1070', '', 99.95, '2017-03-31', 6, 50);
 
 -- --------------------------------------------------------
 
@@ -177,7 +186,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `products`
 --
