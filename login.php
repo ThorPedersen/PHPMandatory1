@@ -26,7 +26,7 @@ if(isset($_POST['login']))
             $_SESSION['access'] = $access;
             $_SESSION['id'] = $email;
             $_SESSION['username'] = $username;
-            header("Location: dashboard.php");
+            header("Location: cart.php");
         }
     }
     else {
@@ -100,7 +100,7 @@ function make_list($parent) {
 	global $categories;
 	echo "<ul>";
 	foreach($parent as $category_id => $cat) {
-		echo " <li><a href='/PHPMandatory1/products.php?category_id=$category_id'> $cat </a> ";
+		echo " <li><a href='products.php?category_id=$category_id'> $cat </a> ";
 		if(isset($categories[$category_id]))
 		{
 			make_list($categories[$category_id]);
@@ -139,7 +139,7 @@ $conn->close();
 
 
 <div class="container" style="background-color:grey; height: 100px;">
-	<nav>
+	<nav class="dropdown">
 	<?php make_list($categories[0]); ?>
 	</nav>
 </div>

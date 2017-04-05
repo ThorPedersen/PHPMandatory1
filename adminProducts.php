@@ -18,7 +18,7 @@ $result = $conn->query($query);
 
 while($row = $result->fetch_array())
 {
-$rows[] = $row;
+	$rows[] = $row;
 }
 
 $result->close();
@@ -69,7 +69,7 @@ $conn->close();
 ?>
 <html>
 <head>
-	<title>Dashboard</title>
+	<title>Create Product</title>
 	<link rel="stylesheet" type="text/css" href="styles/styles.css" />
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
