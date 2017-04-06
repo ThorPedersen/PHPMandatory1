@@ -92,7 +92,9 @@ $conn->close();
 </div>
 
 <div class="container">
-	<h2>Products</h2>
+	<div class="page-header">
+    <h1>Products</h1>      
+  </div>
 
 		<?php
 		if(isset($_GET['category_id']) && isset($rows))
@@ -100,7 +102,7 @@ $conn->close();
 			foreach($rows as $row)
 			{
 				echo "<div class='row'>";
-				echo "<div class='col col-lg-2'><a href='single_product.php'><img src='img/" . $row['image'] . ".jpg' width='100' height='100'></a></div>";
+				echo "<div class='col col-lg-2'><a href='single_product.php?product_id=" . $row['id'] . "'><img src='img/" . $row['image'] . ".jpg' width='100' height='100'></a></div>";
 				echo "<div class='col col-lg-2'><label>" . $row['name'] . "</label></div>";
 				echo "<div class='col col-lg-2'><label>" . $row['price'] . "</label></div>";
 				echo "<div class='col col-lg-2'><label>Stock: " . $row['stock'] . "</label></div>";

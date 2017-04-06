@@ -136,7 +136,9 @@ $conn->close();
 <div class="container">
 	<div class="row">
 		<div class="col-lg-6">
-		<h2>Login</h2>
+		<div class="page-header">
+			<h1>Login</h1>      
+		</div>
 		
 			<form action="" method="post" id="frmLogin">
 				<div class="form-group" style="height:20px">
@@ -156,7 +158,9 @@ $conn->close();
 			</form>
 		</div>
 		<div class="col-lg-6">
-			<h2>Register</h2>
+			<div class="page-header">
+				<h1>register</h1>      
+			</div>
 
 			<form action="" method="post" id="frmRegister">
 				<div class="form-group" style="height:20px">

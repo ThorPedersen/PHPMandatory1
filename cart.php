@@ -90,7 +90,9 @@ $conn->close();
 </div>
 
 <div class="container">
-	<h2>Cart</h2>
+	<div class="page-header">
+    <h1>Cart</h1>      
+  </div>
 	<form>
 	<?php
 	if(isset($rows) && $rows != null)
@@ -111,7 +113,7 @@ $conn->close();
 	}
 	else
 	{
-		echo "<span>Your cart is empty. Log in to fill it up</span>";
+		echo "<span>Your cart is empty</span>";
 	}
 	?>
 </div>
