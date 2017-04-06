@@ -4,21 +4,6 @@ session_start();
 require_once('db_handler.php');
 require_once('category_list.php');
 
-$_SESSION['testarray'] = [];
-
-$_SESSION['testarray']['4'] = 'apple';
-$_SESSION['testarray'][5] = 'bobby';
-
-if (array_key_exists(6,$_SESSION['testarray']))
-  {
-  echo "Key exists!";
-  }
-
-
-echo "<pre>";
-print_r($_SESSION['testarray']);
-echo "</pre>";
-
 if(isset($_SESSION["access"]))
 {
 	if($_SESSION["access"] == 1)
@@ -80,7 +65,7 @@ else
 	 </div>
 	<div class="row">
 
-		<div class="col-md-4">
+		<div class="col-md-6">
 			<a href="adminCategories.php">
 			<div class="row">
 				<div class="col-md-8">
@@ -102,7 +87,7 @@ else
 		</div>
 
 		<a href="adminProducts.php">
-		<div class="col-md-4">
+		<div class="col-md-6">
 			<div class="row">
 				<div class="col-lg-8 ">
 					<div class="panel panel-primary">
@@ -120,28 +105,7 @@ else
 					</div>
 				</div>
 			</div>
-		</div></a>
-		
-		<a href="#.php">
-		<div class="col-md-4">
-			<div class="row">
-				<div class="col-lg-8 ">
-					<div class="panel panel-primary">
-						<div class="panel-heading">
-							<div class="row">
-								<div class="col-xs-3">
-									<i class="fa fa-list fa-4x"></i>
-								</div>
-								<div class="col-xs-9 text-right">
-									<div class="huge"></div>
-									<div><h3>To be</h3></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div></a>
+		</div></a>		
 	</div>	
 
 </div>

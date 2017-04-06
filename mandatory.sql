@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 02, 2017 at 11:41 PM
+-- Generation Time: Apr 07, 2017 at 01:34 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -105,7 +105,13 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `image`, `price`, `date_added`, `category_id`, `stock`) VALUES
-(1, 'GTX 1070', '', 99.95, '2017-03-31', 6, 50);
+(1, 'GTX 1070', 'GP1', 99.95, '2017-03-31', 6, 50),
+(2, 'GTX 9600', 'GP2', 4000, '2017-04-06', 6, 20),
+(3, 'BVCi 500', 'Gp3', 3600, '2017-04-10', 6, 30),
+(4, 'Titan xP', 'GP4', 8000, '2017-04-06', 6, 50),
+(5, 'Logitech Gaming Mouse G300s - USB', '#', 279, '2017-04-06', 3, 20),
+(6, 'GEAR4U Powerbank 12000 mAh', '#', 449, '2017-04-06', 3, 50),
+(7, 'some tv', '#', 5999, '2017-04-07', 7, 50);
 
 -- --------------------------------------------------------
 
@@ -191,7 +197,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- Constraints for dumped tables
 --

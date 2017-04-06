@@ -28,7 +28,9 @@ if(isset($_POST['submit']))
 {
 	$name 	= $_POST['name'];
 	$category 	= $_POST['category'];
+	$image = "#";
 	$stock 	= $_POST['stock'];
+	$price 	= $_POST['price'];
 
 	$Registermessage = "";
 
@@ -50,15 +52,22 @@ if(isset($_POST['submit']))
 	{
 		$Registermessage .= "Stock is required <br>";
 	}
+	if ($price == null || removespaces($stock) == null)
+	{
+		$Registermessage .= "Stock is required <br>";
+	}
 	if(strlen($Registermessage) == "")
 	{
 		$curr_timestamp = date('Y-m-d H:i:s');
 		
-		if($stmt = $conn->prepare("INSERT INTO products (name, date_added,  category_id, stock) VALUES (?, ?, ?, ?)")) {
+		if($stmt = $conn->prepare("INSERT INTO products (name, image, price, date_added,  category_id, stock) VALUES (?, ?, ?, ?, ?, ?)")) {
 				
-			$stmt->bind_param('ssss', $name, $curr_timestamp, $category, $stock);
-			$stmt->execute();
-			$Registermessage = "Product was created in the system";
+			$stmt->bind_param('ssssss', $name, $image, $price, $curr_timestamp, $category, $stock);
+			if($stmt->execute())
+			{
+				$Registermessage = "Product was created in the system";
+			}
+
 		}
 	}
 }
@@ -149,6 +158,10 @@ $conn->close();
 				<div class="form-group">
 					<label for="stock">Stock</label>
 					<input name="stock" type="text" class="form-control" required>
+				</div>
+				<div class="form-group">
+					<label for="price">Price</label>
+					<input name="price" type="text" class="form-control" required>
 				</div>
 				<div class="form-group">
 					<button type="submit" name="submit" class="btn btn-default">Create product</button>
