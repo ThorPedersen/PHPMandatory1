@@ -70,8 +70,12 @@ $conn->close();
 			if(isset($_SESSION['id']))
 			{
 				echo "<ul class='nav navbar-nav navbar-right'>";
+				if(isset($_SESSION['access']) && $_SESSION['access'] == 2)
+				{
+					echo "<li><a href='admin.php'><span class='glyphicon glyphicon glyphicon-cog'></span> Administrate</a></li>";
+				}
 				echo "<li><a href='cart.php'><span class='glyphicon glyphicon-shopping-cart'></span> Cart</a></li>";
-				echo "<li><a href='logout.php'><span class='glyphicon glyphicon-log-out'></span> Log out</a></li>";
+				echo "<li><a href='logout.php'><span class='glyphicon glyphicon-log-out'></span> Log out</a></li>";			
 				echo "</ul>";
 			}
 			else
