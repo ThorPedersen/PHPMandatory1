@@ -1,7 +1,23 @@
 <?php
 session_start();
+//session_destroy();
 require_once('db_handler.php');
 require_once('category_list.php');
+
+$_SESSION['testarray'] = [];
+
+$_SESSION['testarray']['4'] = 'apple';
+$_SESSION['testarray'][5] = 'bobby';
+
+if (array_key_exists(6,$_SESSION['testarray']))
+  {
+  echo "Key exists!";
+  }
+
+
+echo "<pre>";
+print_r($_SESSION['testarray']);
+echo "</pre>";
 
 if(isset($_SESSION["access"]))
 {
@@ -61,7 +77,7 @@ else
 
 	<div class="page-header">
 		<h1>Dashboard</h1>      
-	  </div>
+	 </div>
 	<div class="row">
 
 		<div class="col-md-4">

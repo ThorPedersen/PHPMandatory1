@@ -9,17 +9,27 @@ if(isset($_SESSION['cart']))
 {
 	//print_r($_SESSION['cart']);
 }
+if(isset($_SESSION['price']))
+{
+	//print_r($_SESSION['price']);
+}
+$_SESSION['price'] = [];
 	
 if(isset($_GET['remove_id']))
 {
-	$_SESSION['cart'] = array_diff($_SESSION['cart'], [$_GET['remove_id']]);
+	unset($_SESSION['cart'][$_GET['remove_id']]);
 }
 
 
 if(isset($_SESSION['cart']))
 {
-
-	$query = "SELECT * FROM products WHERE id IN(".implode(',',$_SESSION['cart']).")";
+	$items = [];
+	foreach ($_SESSION['cart'] as $key => $value)
+	{
+		$items[] = $key;
+	}
+	
+	$query = "SELECT * FROM products WHERE id IN(".implode(',',$items).")";
 
 	if ($result = $conn->query($query)) {
 
@@ -101,20 +111,46 @@ $conn->close();
 		{
 			echo "<div class='form-group row'>";
 			echo "<div class='col-lg-2'><img src='img/" . $row['image'] . ".jpg' width='100' height='100'></div>";
+			echo "<label class='col-lg-2'>Price: " . $row['price'] . " </label>";
 			echo "<label class='col-lg-2'>Amount: </label>";
-			echo "<div class='col-lg-2'><input type='text' class='form-control' id='" . $row['id'] . "' width='20'></div>";
+			echo "<div class='col-lg-2'><input type='text' class='form-control' id='" . $row['id'] . "' width='20' value=" . $_SESSION['cart'][$row['id']] . "></div>";
 			echo "<div class='col-lg-4'>" . $row['name'] . " <a href='cart.php?remove_id=" . $row['id'] . "'><span class='glyphicon glyphicon-remove' color:red;></span></a></div>";
 			echo "</form></div><hr>";
+			
+			if(array_key_exists($row['id'], $_SESSION['price'])){
+				
+			}
+			else
+			{
+				$_SESSION['price'][$row['id']] = ($_SESSION['cart'][$row['id']] * $row['price']);
+			}
+			
 		}
 	echo "<div class='row'>";
 	echo "<div class='col-md-3 offset-md-2'><input type='submit' class='btn btn-success' value='Purchase'></div>";
-	echo 	"</form>";
+	echo "</form>";
 	echo "</div>";
+	
+
 	}
 	else
 	{
-		echo "<span>Your cart is empty</span>";
+		echo "<span>Your cart is empty</span><br>";
 	}
+	if(isset($_SESSION['price'])) {
+		$totalprice = 0;
+		foreach($_SESSION['price'] as $price)
+		{
+			$totalprice+=$price;
+			//echo $price;
+		}
+
+	}
+	if(isset($totalprice))
+	{
+		echo "<h2>Total price: " . $totalprice . "</h2>";
+	}
+
 	?>
 </div>
 

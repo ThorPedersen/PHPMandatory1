@@ -9,30 +9,19 @@ require_once('category_list.php');
 
 //inserts product id into cart session
 //TODO check if value already is in cart
-if(isset($_GET['product_id']))
+if(isset($_POST["quantity"]) )
 {
-	if (in_array($_GET['product_id'], $_SESSION['cart'])) {
-	}
-	else
-	{
-		$_SESSION['cart'][] = $_GET['product_id'];
-	}
-
+	$_SESSION['cart'][$_GET['product_id']] = $_POST["quantity"];
 }
-
 if(isset($_GET['category_id']))
 {
 	$query = "SELECT * FROM products WHERE category_id = " . $_GET['category_id'];
 
 	if ($result = $conn->query($query)) {
-
-		/* fetch associative array */
 		while($row = $result->fetch_array())
 		{
 			$rows[] = $row;
 		}
-
-		/* free result set */
 		$result->free();
 	}
 }
@@ -94,23 +83,26 @@ $conn->close();
 <div class="container">
 	<div class="page-header">
     <h1>Products</h1>      
-  </div>
+	</div>
 
 		<?php
 		if(isset($_GET['category_id']) && isset($rows))
 		{
 			foreach($rows as $row)
-			{
+			{			
 				echo "<div class='row'>";
+				echo "<form method='post' action='products.php?category_id=" . $_GET['category_id'] . "&product_id=" . $row['id'] . "'>";
 				echo "<div class='col col-lg-2'><a href='single_product.php?product_id=" . $row['id'] . "'><img src='img/" . $row['image'] . ".jpg' width='100' height='100'></a></div>";
-				echo "<div class='col col-lg-2'><label>" . $row['name'] . "</label></div>";
-				echo "<div class='col col-lg-2'><label>" . $row['price'] . "</label></div>";
+				echo "<div class='col col-lg-1'><label>" . $row['name'] . "</label></div>";
+				echo "<div class='col col-lg-1'><label>" . $row['price'] . "</label></div>";
 				echo "<div class='col col-lg-2'><label>Stock: " . $row['stock'] . "</label></div>";
+				echo "<div class='col col-lg-2'><label>Amount</label></div>";
 				if(isset($_SESSION['username']))
 				{
-					echo "<div class='col col-lg-2'><a href='products.php?category_id=" . $_GET['category_id'] . "&product_id=" .$row['id'] . "'>Click to add to cart <span class='glyphicon glyphicon-shopping-cart'></span></a></div>";
+					echo "<div class='col col-lg-2'><input type='text' name='quantity' value='1' size='2' /></div>";
+					echo "<div class='col col-lg'2'><input type='image' name='submit' value='Add to cart' src='img/cart.png' height='30' width='30' ></div>";			
 				}
-				echo "</div><hr>";
+				echo "</form></div><hr>";
 			}
 
 		}
