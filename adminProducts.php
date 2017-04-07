@@ -22,6 +22,14 @@ while($row = $result->fetch_array())
 	$rows[] = $row;
 }
 
+$query2 = "SELECT * FROM products";
+$result2 = $conn->query($query2);
+
+while($row2 = $result2->fetch_array())
+{
+	$rows2[] = $row2;
+}
+
 $result->close();
 
 if(isset($_POST['submit']))
@@ -71,6 +79,38 @@ if(isset($_POST['submit']))
 		}
 	}
 }
+
+// Make list
+function make_edited_list($rows2) {
+	foreach($rows2 as $row2)
+	{
+		echo $row2['name'] . ": <a href='adminproducts.php?product_id=" . $row2['id'] . "'> edit</a><br>";
+	}
+}
+
+
+if (isset( $_GET['product_id'] ))
+{
+	$product_id = $_GET["product_id"];
+
+	$q = "SELECT * FROM products WHERE id = $product_id";
+	$r = mysqli_query($conn, $q);
+	
+	$row=mysqli_fetch_assoc($r);
+	$product_id = $row['id'];
+	$product_name = $row['name'];
+	$product_image = $row['image'];
+	$product_price = $row['price'];
+	$product_stock = $row['stock'];
+	
+	if (isset($_POST['edit'] ))
+	{		
+		$q2 = "UPDATE products set name = '" . $_POST['product_name'] . "', image = '" . $_POST['product_image'] . "', price = '" . $_POST['product_price'] . "', stock = '" . $_POST['product_stock'] . "' WHERE id = $product_id";
+		$r2 = mysqli_query($conn, $q2);
+		header("Location: adminProducts.php");
+	}
+}
+
 $conn->close();
 	
 	
@@ -149,9 +189,8 @@ $conn->close();
 						
 							foreach($rows as $row)
 							{
-							echo "<option value=" . $row['id'] . "> " . $row['name'] . "</option>";
-							}
-						
+								echo "<option value=" . $row['id'] . "> " . $row['name'] . "</option>";
+							}				
 						?>
 					</select>
 				</div>
@@ -171,7 +210,27 @@ $conn->close();
 					<button type="submit" name="submit" class="btn btn-default">Create product</button>
 				</div>       
 			</form>
-	</div>
+</div>
+<div class="container">
+	<div class="page-header">
+		<h3>edit products</h3>      
+	 </div>
+<?php
+	make_edited_list($rows2);
+	
+	if(isset($_GET['product_id']))
+	{	
+		echo "<form method='POST'>
+		<input type='hidden' value='$product_id'><br>
+		<label>Name: </label><input type='text' name='product_name' value='$product_name'><br>
+		<label>Image path: </label><input type='text' name='product_image' value='$product_image'><br>
+		<label>Price: </label><input type='text' name='product_price' value='$product_price'><br>
+		<label>Stock: </label><input type='text' name='product_stock' value='$product_stock'><br>
+		<button name='edit' type='submit'>edit task</button></form>
+		";
+	}
+?>
+</div>
 
 </div>
 
