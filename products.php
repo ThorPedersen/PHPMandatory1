@@ -1,24 +1,29 @@
 <?php
 session_start();
 
-//session_destroy();
 require_once('db_handler.php');
 require_once('category_list.php');
 
-//print_r($_SESSION['cart']);
-
-//inserts product id into cart session
-//TODO check if value already is in cart
-if(isset($_POST["quantity"]) )
+//checks if quantity (of any individual products) is posted. Then inserts that amount into session cart, along with a product id.
+if(isset($_POST["quantity"]) &&  $_POST["quantity"] != "")
 {
 	$_SESSION['cart'][$_GET['product_id']] = $_POST["quantity"];
 }
+
+//Selects a specific category
 if(isset($_GET['category_id']))
 {
-	$query = "SELECT * FROM products WHERE category_id = " . $_GET['category_id'];
+	$category_id = $_GET['category_id'];
+	$query = "SELECT * FROM products WHERE category_id =?";
 
-	if ($result = $conn->query($query)) {
-		while($row = $result->fetch_array())
+	$stmt = $conn->stmt_init();
+	if($stmt->prepare($query))
+	{
+		$stmt->bind_param("s", $category_id);
+
+		$stmt->execute();
+		$result = $stmt->get_result();
+		while ($row = $result->fetch_array())
 		{
 			$rows[] = $row;
 		}
@@ -95,29 +100,18 @@ $conn->close();
 				echo "<div class='col col-lg-1'><label>" . $row['name'] . "</label></div>";
 				echo "<div class='col col-lg-1'><label>" . $row['price'] . "</label></div>";
 				echo "<div class='col col-lg-2'><label>Stock: " . $row['stock'] . "</label></div>";
-				echo "<div class='col col-lg-2'><label>Amount</label></div>";
+
 				if(isset($_SESSION['username']))
 				{
-					echo "<div class='col col-lg-2'><input type='text' name='quantity' value='1' size='2' /></div>";
-					echo "<div class='col col-lg'2'><input type='image' name='submit' value='Add to cart' src='img/cart.png' height='30' width='30' ></div>";			
+					echo "<div class='col col-lg-2'><label>Amount</label></div>";
+					echo "<div class='col col-lg-2'><input type='text' name='quantity' value='1' size='2' required pattern='[0-9.-_]{1,}' /></div>";
+					echo "<div class='col col-lg'2'><input type='image' name='submit' value='Add to cart' src='img/cart.png' height='30' width='30' ></div>";
 				}
 				echo "</form></div><hr>";
 			}
 
 		}
 		?>
-		<!--<ol>
-		  <li><a href="#home">Home</a></li>
-		  <li><a href="#news">News</a></li>
-		  <li class="dropdowns">
-			<a href="javascript:void(0)" class="dropbtn">Dropdown</a>
-			<div class="dropdowns-content">
-			  <a href="#">Link 1</a>
-			  <a href="#">Link 2</a>
-			  <a href="#">Link 3</a>
-			</div>
-		  </li>
-		</ol>-->
 </div>
 
 

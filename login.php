@@ -3,11 +3,12 @@ session_start();
 require_once('db_handler.php');
 require_once('category_list.php');
 
-/* check connection */
+//check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+//Logs in by checking inputs
 if(isset($_POST['login']))
 {
 	$LoginMessage = "";
@@ -20,9 +21,9 @@ if(isset($_POST['login']))
 	
 	$stmt->bind_result($username, $email, $access);
     $stmt->store_result();
-    if($stmt->num_rows == 1)  //To check if the row exists
+    if($stmt->num_rows == 1) 
     {
-        if($stmt->fetch()) //fetching the contents of the row
+        if($stmt->fetch())
         {
             $_SESSION['access'] = $access;
             $_SESSION['id'] = $email;
@@ -32,11 +33,11 @@ if(isset($_POST['login']))
         }
     }
     else {
-        $LoginMessage = "INVALID USERNAME/PASSWORD Combination!";
+        $LoginMessage = "Your login credentials are invalid.";
     }
     $stmt->close();
 }
-
+//Registers user by checking inputs. Always only creates normal user.
 if(isset($_POST['register']))
 {
 	$firstName 	= $_POST['first_name'];
@@ -44,19 +45,16 @@ if(isset($_POST['register']))
 	$userName 	= $_POST['user_name'];
 	$email 		= $_POST['email'];
 	$password 	= $_POST['password'];
+	
+	//Change to 2 for admin access privileges
 	$access = 1;
 
 	$Registermessage = "";
 
-	//todo: sanitize the post data
-	//check if the form is posted and the form values are not empty then run the code
-
 	function removespaces($s)
 	{
 		return str_replace(" ", "", $s);
-	}
-
-		
+	}	
 	if($firstName == null || removespaces($firstName) == null)
 	{
 		$Registermessage .= "Firstname is required <br>";
@@ -146,11 +144,11 @@ $conn->close();
 				</div>	
 				<div class="form-group">
 					<label for="login">Username</label>
-					<input name="userName" type="text" class="form-control" required>
+					<input name="userName" type="text" class="form-control" required placeholder="'admin' is username" pattern="[a-z0-9_-]{3,50}" title="Username have at least 3 characters, and at most 50 characters">
 				</div>
 				<div class="form-group">
 					<div><label for="password">Password</label></div>
-					<div><input name="password" type="password" class="form-control" required> </div>
+					<div><input name="password" type="password" class="form-control" required placeholder="'admin' is password" pattern=".{4,}" title="four or more characters (for testing with admin)"> </div>
 				</div>
 				<div class="form-group">
 					<button class="btn btn-success" type="submit" name="login" value="Login">Login</button>

@@ -3,6 +3,7 @@ session_start();
 require_once('db_handler.php');
 require_once('category_list.php');
 
+//Checks to see if an admin has logged in, else are redirected to login page
 if(isset($_SESSION["access"]))
 {
 	if($_SESSION["access"] == 1)
@@ -14,20 +15,23 @@ else
 {
 	header("Location: login.php");
 }
+
+//Fetches all categories
 $query = "SELECT * FROM categories";
 $result = $conn->query($query);
 
 while($row = $result->fetch_array())
 {
-$rows[] = $row;
+	$rows[] = $row;
 }
 
 $result->close();
 
+//Submits a category, by validating input
 if(isset($_POST['submit']))
 {
-	$name 	= $_POST['name'];
-	$categories 	= $_POST['categories'];
+	$name 		= $_POST['name'];
+	$categories = $_POST['categories'];
 
 	$Registermessage = "";
 
@@ -35,7 +39,6 @@ if(isset($_POST['submit']))
 	{
 		return str_replace(" ", "", $s);
 	}
-
 		
 	if($name == null || removespaces($name) == null)
 	{
@@ -58,7 +61,8 @@ if(isset($_POST['submit']))
 	}
 }
 
-// Make list
+//Creates a list for editing categories
+//Needs improvement. Bootstrap messes with the ol and li properties, making it look bad.
 function make_edited_list($parent) {
 	global $categories;
 	echo "<ol>";
@@ -73,26 +77,36 @@ function make_edited_list($parent) {
 	echo "</ol>";
 }
 
-
-if ( isset( $_GET['category_id'] ) && !empty( $_GET['category_id'] ) )
+//Updates category from input
+if (isset($_GET['category_id']) && !empty($_GET['category_id']) )
 {
 	$category_id = $_GET["category_id"];
 
-	$q = "SELECT id, name FROM categories WHERE id = $category_id";
-	$r = mysqli_query($conn, $q);
-	
-	$row=mysqli_fetch_assoc($r);
-	$category_id = $row['id'];
-	$category_name = $row['name'];
-	
-	if (isset($_POST['edit'] ))
-	{		
-		$q2 = "UPDATE categories set name = '" . $_POST['category_name'] . "' WHERE id = $category_id";
-		$r2 = mysqli_query($conn, $q2);
-		header("Location: adminCategories.php");
+	if ($stmt = $conn->prepare("SELECT id, name FROM categories WHERE id = ?")) {
+		$stmt->bind_param("s", $category_id);
+		if($stmt->execute()) {
+			$result = $stmt->get_result();
+			$stmt->close();
+			
+			if($row = $result->fetch_array())
+			{
+				$category_id = $row['id'];
+				$category_name = $row['name'];
+				
+				if (isset($_POST['edit'] ))
+				{	
+					$category = $_POST['category_name'];
+					$stmt2 = $conn->prepare("UPDATE categories SET name=? WHERE id=?");
+					$stmt2->bind_param("ss", $category, $category_id);
+					$stmt2->execute();
+					$stmt2->close();
+					
+					header("Location: adminCategories.php");
+				}
+			}		
+		}
 	}
 }
-
 
 $conn->close();
 	

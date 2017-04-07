@@ -1,26 +1,29 @@
 <?php
 session_start();
 
-//session_destroy();
 require_once('db_handler.php');
 require_once('category_list.php');
 
+//Checks content of cart session
 if(isset($_SESSION['cart']))
 {
 	//print_r($_SESSION['cart']);
 }
+
+//Checks content of price session
+$_SESSION['price'] = [];
 if(isset($_SESSION['price']))
 {
 	//print_r($_SESSION['price']);
 }
-$_SESSION['price'] = [];
-	
+
+//Removes product id from cart
 if(isset($_GET['remove_id']))
 {
 	unset($_SESSION['cart'][$_GET['remove_id']]);
 }
 
-
+//Fetches all products from cart
 if(isset($_SESSION['cart']))
 {
 	$items = [];
@@ -28,7 +31,8 @@ if(isset($_SESSION['cart']))
 	{
 		$items[] = $key;
 	}
-	
+
+	//Not sure how to make this more secure
 	$query = "SELECT * FROM products WHERE id IN(".implode(',',$items).")";
 
 	if ($result = $conn->query($query)) {
@@ -119,15 +123,13 @@ $conn->close();
 			else
 			{
 				$_SESSION['price'][$row['id']] = ($_SESSION['cart'][$row['id']] * $row['price']);
-			}
-			
+			}			
 		}
-	echo "<div class='row'>";
-	echo "<div class='col-md-3 offset-md-2'><input type='submit' class='btn btn-success' value='Purchase'></div>";
-	echo "</form>";
-	echo "</div>";
+		echo "<div class='row'>";
+		echo "<div class='col-md-3 offset-md-2'><input type='submit' class='btn btn-success' value='Purchase'></div>";
+		echo "</form>";
+		echo "</div>";
 	
-
 	}
 	else
 	{
@@ -144,7 +146,7 @@ $conn->close();
 	}
 	if(isset($totalprice))
 	{
-		echo "<h2>Total price: " . $totalprice . "</h2>";
+		echo "<h2>Total price: " . $totalprice . ",-</h2>";
 	}
 
 	?>

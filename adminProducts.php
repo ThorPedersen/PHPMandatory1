@@ -3,6 +3,7 @@ session_start();
 require_once('db_handler.php');
 require_once('category_list.php');
 
+//Checks if a user is set who has admin access
 if(isset($_SESSION["access"]))
 {
 	if($_SESSION["access"] == 1)
@@ -14,24 +15,35 @@ else
 {
 	header("Location: login.php");
 }
+
+//Populates rows array with categories.
 $query = "SELECT * FROM categories";
 $result = $conn->query($query);
-
 while($row = $result->fetch_array())
 {
 	$rows[] = $row;
 }
 
+//populates rows2 array with products
 $query2 = "SELECT * FROM products";
 $result2 = $conn->query($query2);
-
 while($row2 = $result2->fetch_array())
 {
 	$rows2[] = $row2;
 }
 
-$result->close();
+//Makes editing for each product
+function make_edited_list($rows2) {
+	foreach($rows2 as $row2)
+	{
+		echo $row2['name'] . ": <a href='adminproducts.php?product_id=" . $row2['id'] . "'> edit</a><br>";
+	}
+}
 
+$result->close();
+$result2->close();
+
+//Creates product in database, after validating the fields a bit more
 if(isset($_POST['submit']))
 {
 	$name 	= $_POST['name'];
@@ -42,12 +54,12 @@ if(isset($_POST['submit']))
 
 	$Registermessage = "";
 
+	//Removes whitespace from input
 	function removespaces($s)
 	{
 		return str_replace(" ", "", $s);
 	}
-
-		
+	
 	if($name == null || removespaces($name) == null)
 	{
 		$Registermessage .= "name is required <br>";
@@ -60,9 +72,9 @@ if(isset($_POST['submit']))
 	{
 		$Registermessage .= "Stock is required <br>";
 	}
-	if ($price == null || removespaces($stock) == null)
+	if ($price == null || removespaces($price) == null)
 	{
-		$Registermessage .= "Stock is required <br>";
+		$Registermessage .= "price is required <br>";
 	}
 	if(strlen($Registermessage) == "")
 	{
@@ -80,34 +92,41 @@ if(isset($_POST['submit']))
 	}
 }
 
-// Make list
-function make_edited_list($rows2) {
-	foreach($rows2 as $row2)
-	{
-		echo $row2['name'] . ": <a href='adminproducts.php?product_id=" . $row2['id'] . "'> edit</a><br>";
-	}
-}
-
-
+//Updates product from form
 if (isset( $_GET['product_id'] ))
 {
 	$product_id = $_GET["product_id"];
 
-	$q = "SELECT * FROM products WHERE id = $product_id";
-	$r = mysqli_query($conn, $q);
-	
-	$row=mysqli_fetch_assoc($r);
-	$product_id = $row['id'];
-	$product_name = $row['name'];
-	$product_image = $row['image'];
-	$product_price = $row['price'];
-	$product_stock = $row['stock'];
-	
-	if (isset($_POST['edit'] ))
-	{		
-		$q2 = "UPDATE products set name = '" . $_POST['product_name'] . "', image = '" . $_POST['product_image'] . "', price = '" . $_POST['product_price'] . "', stock = '" . $_POST['product_stock'] . "' WHERE id = $product_id";
-		$r2 = mysqli_query($conn, $q2);
-		header("Location: adminProducts.php");
+	if ($stmt = $conn->prepare("SELECT * FROM products WHERE id =?")) {
+		$stmt->bind_param("s", $product_id);
+		if($stmt->execute()) {
+			$result = $stmt->get_result();
+			$stmt->close();
+			
+			if($row = $result->fetch_array())
+			{
+				$product_id = $row['id'];
+				$product_name = $row['name'];
+				$product_image = $row['image'];
+				$product_price = $row['price'];
+				$product_stock = $row['stock'];		
+				
+				if (isset($_POST['edit'] ))
+				{	
+					$name = $_POST['product_name'];
+					$image = $_POST['product_image'];
+					$price = $_POST['product_price'];
+					$stock = $_POST['product_stock'];
+			
+					$stmt2 = $conn->prepare("UPDATE products SET name=?, image=?, price=?, stock=? WHERE id=?");
+					$stmt2->bind_param("sssss", $name, $image, $price, $stock, $product_id);
+					$stmt2->execute();
+					$stmt2->close();
+					
+					header("Location: adminProducts.php");
+				}
+			}
+		}
 	}
 }
 

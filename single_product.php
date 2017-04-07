@@ -1,15 +1,17 @@
 <?php
 session_start();
 
-//session_destroy();
 require_once('db_handler.php');
 require_once('category_list.php');
 
-//print_r($_SESSION['cart']);
+//checks if quantity (of any individual products) is posted. Then inserts that amount into session cart, along with a product id.
+if(isset($_POST["quantity"]) &&  $_POST["quantity"] != "")
+{
+	$_SESSION['cart'][$_GET['product_id']] = $_POST["quantity"];
+}
 
-//inserts product id into cart session
-//TODO check if value already is in cart
-if(isset($_GET['product_id']))
+//Inserts a specific product into cart session when quantity is posted
+if(isset($_GET['product_id']) && isset($_POST["quantity"]))
 {
 	if (in_array($_GET['product_id'], $_SESSION['cart'])) {
 	}
@@ -17,22 +19,25 @@ if(isset($_GET['product_id']))
 	{
 		$_SESSION['cart'][] = $_GET['product_id'];
 	}
-
 }
 
+//Gets single product from url get
 if(isset($_GET['product_id']))
 {
-	$query = "SELECT * FROM products WHERE id = " . $_GET['product_id'];
+	$product_id = $_GET['product_id'];
+	$query = "SELECT * FROM products WHERE id=?";
 
-	if ($result = $conn->query($query)) {
+	$stmt = $conn->stmt_init();
+	if($stmt->prepare($query))
+	{
+		$stmt->bind_param("s", $product_id);
 
-		/* fetch associative array */
-		while($row = $result->fetch_array())
+		$stmt->execute();
+		$result = $stmt->get_result();
+		while ($row = $result->fetch_array())
 		{
 			$rows[] = $row;
 		}
-
-		/* free result set */
 		$result->free();
 	}
 }
@@ -102,13 +107,16 @@ $conn->close();
 			foreach($rows as $row)
 			{
 				echo "<div class='row'>";
-				echo "<div class='col col-lg-2'><a href='single_product.php?product_id= " . $row['id'] . "'><img src='img/" . $row['image'] . ".jpg' width='100' height='100'></a></div>";
-				echo "<div class='col col-lg-2'><label>" . $row['name'] . "</label></div>";
-				echo "<div class='col col-lg-2'><label>" . $row['price'] . "</label></div>";
+				echo "<form method='post' action='single_product.php?product_id=" . $_GET['product_id'] . "'>";
+				echo "<div class='col col-lg-2'><a href='single_product.php?product_id=" . $row['id'] . "'><img src='img/" . $row['image'] . ".jpg' width='100' height='100'></a></div>";
+				echo "<div class='col col-lg-1'><label>" . $row['name'] . "</label></div>";
+				echo "<div class='col col-lg-1'><label>" . $row['price'] . "</label></div>";
 				echo "<div class='col col-lg-2'><label>Stock: " . $row['stock'] . "</label></div>";
 				if(isset($_SESSION['username']))
 				{
-					echo "<div class='col col-lg-2'><a href='single_product.php?product_id=" . $_GET['product_id'] . "'>Click to add to cart <span class='glyphicon glyphicon-shopping-cart'></span></a></div>";
+					echo "<div class='col col-lg-2'><label>Amount</label></div>";
+					echo "<div class='col col-lg-2'><input type='text' name='quantity' value='1' size='2' /></div>";
+					echo "<div class='col col-lg'2'><input type='image' name='submit' value='Add to cart' src='img/cart.png' height='30' width='30' ></div>";
 				}
 				echo "</div><hr>";
 			}

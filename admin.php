@@ -1,9 +1,10 @@
 <?php
 session_start();
-//session_destroy();
+
 require_once('db_handler.php');
 require_once('category_list.php');
 
+//Checks if a user is set who has admin access
 if(isset($_SESSION["access"]))
 {
 	if($_SESSION["access"] == 1)
@@ -52,7 +53,9 @@ else
 				echo "</ul>";
 			}
 			?>
-			<?php make_list($categories[0]); ?>	
+			<?php //Calls a recursive method from category_list.php
+				make_list($categories[0]); 
+			?>	
 
 		</div>
 	</nav>
