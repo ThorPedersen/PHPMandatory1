@@ -27,7 +27,7 @@ $result->close();
 if(isset($_POST['submit']))
 {
 	$name 	= $_POST['name'];
-	$category 	= $_POST['category'];
+	$categories 	= $_POST['categories'];
 
 	$Registermessage = "";
 
@@ -41,7 +41,7 @@ if(isset($_POST['submit']))
 	{
 		$Registermessage .= "Firstname is required <br>";
 	}
-	if ($category == null || removespaces($category) == null)
+	if ($categories == null || removespaces($categories) == null)
 	{
 		$Registermessage .= "Lastname is required <br>";
 	}
@@ -49,14 +49,51 @@ if(isset($_POST['submit']))
 	{
 		$curr_timestamp = date('Y-m-d H:i:s');
 		
-		if($stmt = $conn->prepare("INSERT INTO categories (name, category_id) VALUES (?, ?)")) {
+		if($stmt = $conn->prepare("INSERT INTO categories (name, categories_id) VALUES (?, ?)")) {
 				
-			$stmt->bind_param('ss', $name, $category);
+			$stmt->bind_param('ss', $name, $categories);
 			$stmt->execute();
-			$Registermessage = "Category was created in the system";
+			$Registermessage = "categories was created in the system";
 		}
 	}
 }
+
+// Make list
+function make_edited_list($parent) {
+	global $categories;
+	echo "<ol>";
+	foreach($parent as $category_id => $todo) {
+		echo "<li>$todo <a href='adminCategories.php?category_id=$category_id'>edit</a>";
+		if(isset($categories[$category_id])) {
+			
+			make_edited_list($categories[$category_id]);
+		}
+		echo '</li>';
+	}
+	echo "</ol>";
+}
+
+
+if ( isset( $_GET['category_id'] ) && !empty( $_GET['category_id'] ) )
+{
+	$category_id = $_GET["category_id"];
+
+	$q = "SELECT id, name FROM categories WHERE id = $category_id";
+	$r = mysqli_query($conn, $q);
+	
+	$row=mysqli_fetch_assoc($r);
+	$category_id = $row['id'];
+	$category_name = $row['name'];
+	
+	if (isset($_POST['edit'] ))
+	{		
+		$q2 = "UPDATE categories set name = '" . $_POST['category_name'] . "' WHERE id = $category_id";
+		$r2 = mysqli_query($conn, $q2);
+		header("Location: adminCategories.php");
+	}
+}
+
+
 $conn->close();
 	
 	
@@ -65,7 +102,7 @@ $conn->close();
 ?>
 <html>
 <head>
-	<title>Create Category</title>
+	<title>Create categories</title>
 	<link rel="stylesheet" type="text/css" href="styles/styles.css" />
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -128,9 +165,9 @@ $conn->close();
 					<input name="name" type="text" class="form-control" required>
 				</div>
 				<div class="form-group">
-					<label for="category">Optional parent category</label>
+					<label for="categories">Optional parent categories</label>
 								
-					<select name="category" class="form-control">
+					<select name="categories" class="form-control">
 						<?php
 							echo "<option value='0'>empty</option>";
 							foreach($rows as $row)
@@ -142,14 +179,25 @@ $conn->close();
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="stock">Stock</label>
-					<input name="stock" type="text" class="form-control" required>
-				</div>
-				<div class="form-group">
-					<button type="submit" name="submit" class="btn btn-default">Create category</button>
+					<button type="submit" name="submit" class="btn btn-default">Create categories</button>
 				</div>       
 			</form>
-	</div>
+</div>
+<div class="container">
+	<div class="page-header">
+		<h3>edit categories</h3>      
+	 </div>
+<?php make_edited_list($categories[0]);
+	if(isset($_GET['category_id']))
+	{
+		echo "<form method='POST'>
+		<input type='hidden' value='$category_id'><br>
+		<input type='text' name='category_name' value='$category_name'><br>
+		<button name='edit' type='submit'>edit task</button></form>
+		";
+	}
+?>
+</div>
 
 </div>
 

@@ -33,17 +33,13 @@ if(isset($_SESSION['cart']))
 
 	if ($result = $conn->query($query)) {
 
-		/* fetch associative array */
 		while($row = $result->fetch_array())
 		{
 			$rows[] = $row;
 		}
 
-		/* free result set */
 		$result->free();
 	}
-
-
 }
 
 $conn->close();

@@ -33,7 +33,6 @@ $conn->close();
 <html>
 <head>
 	<title>Products</title>
-	<link rel="stylesheet" type="text/css" href="styles/styles.css" />
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -107,6 +106,18 @@ $conn->close();
 
 		}
 		?>
+		<!--<ol>
+		  <li><a href="#home">Home</a></li>
+		  <li><a href="#news">News</a></li>
+		  <li class="dropdowns">
+			<a href="javascript:void(0)" class="dropbtn">Dropdown</a>
+			<div class="dropdowns-content">
+			  <a href="#">Link 1</a>
+			  <a href="#">Link 2</a>
+			  <a href="#">Link 3</a>
+			</div>
+		  </li>
+		</ol>-->
 </div>
 
 

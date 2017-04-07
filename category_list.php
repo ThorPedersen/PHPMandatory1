@@ -9,6 +9,7 @@ while(list($category_id, $category, $parent_id) = mysqli_fetch_array($r, MYSQLI_
 	$categories[$parent_id][$category_id] = $category;
 }
 
+//Doesn't work very well. Possibly bootstrap css that screws it up.
 function make_list($parent, $bool = false) {
     
 	global $categories;
@@ -16,10 +17,10 @@ function make_list($parent, $bool = false) {
 
 	foreach ($parent as $category_id => $cat) {
 
-	    echo '<li class="'.(isset($categories[$category_id]) ? "dropdown" : "").'"><a href="products.php?category_id=' . $category_id . '">' . $cat . '</a>'; 
+	    echo '<li class="'.(isset($categories[$category_id]) ? "dropdowns" : "").'"><a href="products.php?category_id=' . $category_id . '">' . $cat . '</a>'; 
             
 		if (isset($categories[$category_id])) { 
-			echo '<div class="'.(($bool) ? "dropdown-itmes" : "dropdown-content").'">';
+			echo '<div class="'.(($bool) ? "dropdowns-itmes" : "dropdowns-content").'">';
 			make_list($categories[$category_id], true);
 			echo '</div>';
 		}         

@@ -28,7 +28,7 @@ if(isset($_POST['submit']))
 {
 	$name 	= $_POST['name'];
 	$category 	= $_POST['category'];
-	$image = "#";
+	$image = $_POST['image'];
 	$stock 	= $_POST['stock'];
 	$price 	= $_POST['price'];
 
@@ -162,6 +162,10 @@ $conn->close();
 				<div class="form-group">
 					<label for="price">Price</label>
 					<input name="price" type="text" class="form-control" required>
+				</div>				
+				<div class="form-group">
+					<label for="image">image</label>
+					<input name="image" type="text" class="form-control" required>
 				</div>
 				<div class="form-group">
 					<button type="submit" name="submit" class="btn btn-default">Create product</button>
