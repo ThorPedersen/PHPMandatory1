@@ -1,5 +1,7 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "mandatory");
+$homedatabase = "thor_php_mandatory_1";
+$laptopdatabase = "mandatory";
+$conn = mysqli_connect("localhost", "root", "", $homedatabase);
 
 //check if connection fails
 if(!$conn) {

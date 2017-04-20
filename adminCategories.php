@@ -31,7 +31,7 @@ $result->close();
 if(isset($_POST['submit']))
 {
 	$name 		= $_POST['name'];
-	$categories = $_POST['categories'];
+	$category = $_POST['categories'];
 
 	$Registermessage = "";
 
@@ -44,7 +44,7 @@ if(isset($_POST['submit']))
 	{
 		$Registermessage .= "Firstname is required <br>";
 	}
-	if ($categories == null || removespaces($categories) == null)
+	if ($category == null || removespaces($category) == null)
 	{
 		$Registermessage .= "Lastname is required <br>";
 	}
@@ -52,11 +52,12 @@ if(isset($_POST['submit']))
 	{
 		$curr_timestamp = date('Y-m-d H:i:s');
 		
-		if($stmt = $conn->prepare("INSERT INTO categories (name, categories_id) VALUES (?, ?)")) {
+		if($stmt = $conn->prepare("INSERT INTO categories (name, parent_id) VALUES (?, ?)")) {
 				
-			$stmt->bind_param('ss', $name, $categories);
+			$stmt->bind_param('ss', $name, $category);
 			$stmt->execute();
 			$Registermessage = "categories was created in the system";
+			header("Location: adminCategories.php");
 		}
 	}
 }
