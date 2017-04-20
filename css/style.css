@@ -1,46 +1,80 @@
-/*ul { 
-	padding: 0;
-	margin: 0;
-	background: #fff;
+    /* Remove the jumbotron's default bottom margin */ 
+     .jumbotron {
+      margin-bottom: 0;
+    }
+
+
+
+ol {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
-li { 
-	display: inline; 
-	position: relative; 
+li {
+    float: left;
 }
 
-ul ul { 
-	position: absolute; 
-	left: 0; 
-	top: 100%; 
-	display: none; 
+li a, .dropbtn {
+    display: inline-block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
 }
 
-li:hover ul {
-	display: block; 
-}*/
-
-nav > ul > li {
-    clear: left;
-    position: relative;
+li a:hover, .dropdowns:hover .dropbtn {
+    //background-color: red;
 }
 
-nav > ul > li ul {
-     display: none;   
+li.dropdowns {
+    display: inline-block;
 }
 
-nav > ul > li:hover ul {
+.dropdowns-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdowns-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdowns-content a:hover {
+	background-color: #f1f1f1
+}
+
+.dropdowns:hover .dropdowns-content {
     display: block;
 }
 
-nav > ul > li ul {
+.dropdowns-itmes {
+    display: none !important;
     position: absolute;
-    left: 100px;
-    top: 0;
+	margin-top:34px;
+	top: 10px;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2;
 }
 
+.dropdowns-itmes a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
 
-nav > ul > li ul li {
-    float: left;
-    display: inline-block;
-}?
+.dropdowns:hover .dropdowns-content:hover .dropdowns-itmes{
+    display: block !important;
+}

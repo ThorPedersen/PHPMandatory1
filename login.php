@@ -1,12 +1,14 @@
 <?php
 session_start();
 require_once('db_handler.php');
+require_once('category_list.php');
 
-/* check connection */
+//check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+//Logs in by checking inputs
 if(isset($_POST['login']))
 {
 	$LoginMessage = "";
@@ -19,22 +21,23 @@ if(isset($_POST['login']))
 	
 	$stmt->bind_result($username, $email, $access);
     $stmt->store_result();
-    if($stmt->num_rows == 1)  //To check if the row exists
+    if($stmt->num_rows == 1) 
     {
-        if($stmt->fetch()) //fetching the contents of the row
+        if($stmt->fetch())
         {
             $_SESSION['access'] = $access;
             $_SESSION['id'] = $email;
             $_SESSION['username'] = $username;
-            header("Location: dashboard.php");
+			$_SESSION['cart'] = [];
+            header("Location: cart.php");
         }
     }
     else {
-        $LoginMessage = "INVALID USERNAME/PASSWORD Combination!";
+        $LoginMessage = "Your login credentials are invalid.";
     }
     $stmt->close();
 }
-
+//Registers user by checking inputs. Always only creates normal user.
 if(isset($_POST['register']))
 {
 	$firstName 	= $_POST['first_name'];
@@ -42,19 +45,16 @@ if(isset($_POST['register']))
 	$userName 	= $_POST['user_name'];
 	$email 		= $_POST['email'];
 	$password 	= $_POST['password'];
+	
+	//Change to 2 for admin access privileges
 	$access = 1;
 
 	$Registermessage = "";
 
-	//todo: sanitize the post data
-	//check if the form is posted and the form values are not empty then run the code
-
 	function removespaces($s)
 	{
 		return str_replace(" ", "", $s);
-	}
-
-		
+	}	
 	if($firstName == null || removespaces($firstName) == null)
 	{
 		$Registermessage .= "Firstname is required <br>";
@@ -85,36 +85,6 @@ if(isset($_POST['register']))
 		}
 	}
 }
-
-$q = 'SELECT id, name, parent_id FROM categories';
-$r = mysqli_query($conn, $q);
-
-$categories = array();
-
-while(list($category_id, $category, $parent_id) = mysqli_fetch_array($r, MYSQLI_NUM))
-{
-	$categories[$parent_id][$category_id] = $category;
-}
-
-function make_list($parent) {
-	global $categories;
-	echo "<ul>";
-	foreach($parent as $category_id => $cat) {
-		echo " <li><a href='/PHPMandatory1/products.php?category_id=$category_id'> $cat </a> ";
-		if(isset($categories[$category_id]))
-		{
-			make_list($categories[$category_id]);
-		}
-		echo "</li>";
-	}
-	echo "</ul>";
-	
-}
-
-//make_list($categories[0]);
-/*echo "<pre>";
-print_r($categories);
-echo "</pre>";*/
 	
 $conn->close();
 
@@ -134,20 +104,39 @@ $conn->close();
 </head>
 <body>
 
-<div class="container" style="height:100px; background-color:grey;">
+<div class="container">
+	<div class="jumbotron">
+	  <div class="container text-center">
+		<h1>Shopping cart</h1>      
+		<p>mandatory assignment</p>
+	  </div>
+	</div>
 </div>
 
+<div class="container">
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<?php 
+			if(isset($_SESSION['id']))
+			{
+				echo "<ul class='nav navbar-nav navbar-right'>";
+				echo "<li><a href='cart.php'><span class='glyphicon glyphicon-shopping-cart'></span> Cart</a></li>";
+				echo "<li><a href='logout.php'><span class='glyphicon glyphicon-log-out'></span> Log out</a></li>";
+				echo "</ul>";
+			}
+			?>
+			<?php make_list($categories[0]); ?>	
 
-<div class="container" style="background-color:grey; height: 100px;">
-	<nav>
-	<?php make_list($categories[0]); ?>
+		</div>
 	</nav>
 </div>
 
 <div class="container">
 	<div class="row">
-		<div class="col-lg-12">
-		<h2>Login</h2>
+		<div class="col-lg-6">
+		<div class="page-header">
+			<h1>Login</h1>      
+		</div>
 		
 			<form action="" method="post" id="frmLogin">
 				<div class="form-group" style="height:20px">
@@ -155,18 +144,21 @@ $conn->close();
 				</div>	
 				<div class="form-group">
 					<label for="login">Username</label>
-					<input name="userName" type="text" class="form-control" required>
+					<input name="userName" type="text" class="form-control" required placeholder="'admin' is username" pattern="[a-z0-9_-]{3,50}" title="Username have at least 3 characters, and at most 50 characters">
 				</div>
 				<div class="form-group">
 					<div><label for="password">Password</label></div>
-					<div><input name="password" type="password" class="form-control" required> </div>
+					<div><input name="password" type="password" class="form-control" required placeholder="'admin' is password" pattern=".{4,}" title="four or more characters (for testing with admin)"> </div>
 				</div>
 				<div class="form-group">
-					<button class="btn btn-default" type="submit" name="login" value="Login">Login</button>
+					<button class="btn btn-success" type="submit" name="login" value="Login">Login</button>
 				</div>       
 			</form>
-			
-			<h2>Register</h2>
+		</div>
+		<div class="col-lg-6">
+			<div class="page-header">
+				<h1>register</h1>      
+			</div>
 
 			<form action="" method="post" id="frmRegister">
 				<div class="form-group" style="height:20px">
@@ -174,15 +166,15 @@ $conn->close();
 				</div>	
 				<div class="form-group">
 					<label for="first_name">First name</label>
-					<input name="first_name" type="text" class="form-control" required>
+					<input name="first_name" type="text" class="form-control" pattern="[A-Za-z]{2,}" title="First name must only have letters and be longer than 2 letters" required>
 				</div>
 				<div class="form-group">
 					<label for="last_name">Last name</label>
-					<input name="last_name" type="text" class="form-control" required>
+					<input name="last_name" type="text" class="form-control" pattern="[A-Za-z]{2,}" title="Last name must only have letters and be longer than 2 letters" required>
 				</div>
 				<div class="form-group">
 					<label for="user_name">User name</label>
-					<input name="user_name" type="text" class="form-control" required>
+					<input name="user_name" type="text" class="form-control" pattern="[a-z0-9_-]{3,50}" title="Username have at least 3 characters, and at most 50 characters" required>
 				</div>
 				<div class="form-group">
 					<label for="email">Email</label>
@@ -190,10 +182,10 @@ $conn->close();
 				</div>
 				<div class="form-group">
 					<label for="password">Password</label>
-					<input name="password" type="password" class="form-control" required>
+					<input name="password" type="password" class="form-control" pattern=".{6,}" title="Six or more characters" required>
 				</div>
 				<div class="form-group">
-					<button type="submit" name="register" value="register" class="btn btn-default">Register</button>
+					<button type="submit" name="register" value="register" class="btn btn-success">Register</button>
 				</div>       
 			</form>
 		</div>
